@@ -8,7 +8,7 @@ function fillForms(obj) {
   $('#ea_fifth_isbn').val(obj['체크기호']).attr("readOnly", false);
 
   //trivials
-  $('#ea_add_code')   .  val(obj['부가기호']);
+  $('#ea_add_code')     .val(obj['부가기호']);
   $('#title')           .val(obj['도서명']);
   $('#subtitle')        .val(obj['부제명']);
   $('#originalTitle')   .val(obj['번역서의_원제목']);
@@ -27,8 +27,11 @@ function fillForms(obj) {
   chgApplicant();
 
   //필요시 판수를 개정판으로
-  if(obj['판수'] > 1)
+  if(obj['판수'] > 1) {
     $('#editionType').val('REV');
+    $('#editionNumber').val(obj['판차']);
+    $('#prevProductIDValue').val(obj['전판ISBN']);
+  }
 
   //역자 추가. todo: 여러 명 지원. 저자도 마찬가지.
   // if(obj['역자'] != '')

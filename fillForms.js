@@ -1,4 +1,6 @@
-function fillForms(obj) {
+//changelog는 깃허브에: https://github.com/anemochore/fill-NL-forms/commits/main
+
+async function fillForms(obj) {
   obj['정가'] = parseInt(obj['정가'].replace(/^₩/, '').replaceAll(/,/g, ''));
 
   //서명식별번호
@@ -12,7 +14,6 @@ function fillForms(obj) {
   $('#title')             .val(obj['도서명']);
   $('#subtitle')          .val(obj['부제명']);
   $('#originalTitle')     .val(obj['번역서의_원제목']);
-  $('#contributorList\\[0\\]\\.contributorName').val(obj['저자']);
   $('#priceAmount')       .val(obj['정가']);
   $('#width')             .val(obj['가로']);
   $('#height')            .val(obj['세로']);
@@ -33,14 +34,27 @@ function fillForms(obj) {
     $('#prevProductIDValue').val(obj['전판ISBN']);
   }
 
-  //역자 추가. todo: 여러 명 지원. 저자도 마찬가지.
-  // if(obj['역자'] != '')
+  //저자 + 역자 추가 (삽화가 등은 어쩌지-_-?)
+  const authors = obj['저자'].split(',');
+  const translators = obj['역자'].split(',');
 
-  //역자
-  fn_createAuthor(1);
-  //await elementReady('#contributorRole1');
-  $('#contributorList\\[1\\]\\.contributorRole').ready(() => {
-    $('#contributorList\\[1\\]\\.contributorRole').val('B06');
-    $('#contributorList\\[1\\]\\.contributorName').val(obj['역자']);
-  });
+  let contributors = authors.concat(translators).map(el => el.trim());
+  let roles = authors.fill('A01').concat(translators.fill('B06'));
+
+  //1번 원소는 무조건 세팅하고 버림
+  $(`#contributorList\\[0\\]\\.contributorName`).val(contributors[0]);
+  contributors.shift();
+  roles.shift();
+
+  //원소가 둘 이상이었다면 다음 루프가 실행
+  for(let index in Object.keys(contributors)) {
+    index = Number(index);
+    fn_createAuthor();
+    $(`#contributorList\\[${index+1}\\]\\.contributorRole`).ready(() => {
+      $(`#contributorList\\[${index+1}\\]\\.contributorRole`).val(roles[index]);
+      $(`#contributorList\\[${index+1}\\]\\.contributorName`).val(contributors[index]);
+    });
+  }
+
 }
+

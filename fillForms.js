@@ -23,7 +23,11 @@ async function fillForms(obj) {
 
   //신청자
   const values = [...$('#applicantKey')[0].children];
-  const value = values[values.map(el => el.text.split('(')[0]).indexOf(obj['담당자'])].value;
+  const value = values[values.map(el => el.text.split('(')[0]).indexOf(obj['담당자'])]?.value;
+  if(!value) {
+    alert(`먼저 이 페이지 하단 '담당자 정보관리'에 들어가서 담당자 정보를 입력하고 다시 실행해주세요~`);
+    return;
+  }
   $('#applicantKey').val(value);
   fn_chgApplicant($('#applicantKey')[0]);
 

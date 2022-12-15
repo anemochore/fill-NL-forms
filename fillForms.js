@@ -40,7 +40,7 @@ async function fillForms(obj) {
 
   //저자 + 역자 추가 (삽화가 등은 어쩌지-_-?)
   const authors = obj['저자'].split(',');
-  const translators = obj['역자'].split(',');
+  const translators = obj['역자']?.split(',') || [];
 
   let contributors = authors.concat(translators).map(el => el.trim());
   let roles = authors.fill('A01').concat(translators.fill('B06'));

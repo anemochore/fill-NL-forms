@@ -107,7 +107,6 @@ async function fillForms2(obj) {
     }
     const input = td.querySelector('div>input[type="text"]') ||  //ISBN 등
                   td.querySelector('input[type="text"]');        //부가기호 등
-
     if(input) {
       input.value = obj[item];
     }

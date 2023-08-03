@@ -100,7 +100,11 @@ async function fillForms2(obj) {
     const thSpan = findDiv_(root, itemToSearch, 'div:not([style])>table>tbody>tr>th>span', false, useLast) ||
                    findDiv_(root, itemToSearch, 'th>span',  false, useLast) || 
                    findDiv_(root, itemToSearch, 'div>span', false, useLast);
-    let td = (thSpan?.closest('th') || thSpan?.closest('div')).nextElementSibling;
+    let td = (thSpan?.closest('th') || thSpan?.closest('div'))?.nextElementSibling;
+    if(!td) {
+      console.warn(`cannot find ${item} (${obj[item]})!`);
+      continue;
+    }
     const input = td.querySelector('div>input[type="text"]') ||  //ISBN 등
                   td.querySelector('input[type="text"]');        //부가기호 등
 

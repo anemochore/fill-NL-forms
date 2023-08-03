@@ -154,6 +154,10 @@ async function fillForms2(obj) {
     sel.setAttribute('data-parsley-required', false);
     const [opt, idx] = findDiv_(sel, value, 'option', true);  //opt is not used
     sel.selectedIndex = idx;
+    if(idx < 0) {
+      console.log(`skipped ${value} option for it's not found.`);
+      return;
+    }
 
     const span = baseEl.querySelector('span[role="combobox"]');
     span.click();

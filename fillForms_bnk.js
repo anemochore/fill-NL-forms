@@ -82,20 +82,28 @@ async function fillForms2(obj) {
 
   //trivials
   root = $('div.inner>form')[0];
-  let numberToAdd = 1;
   for(item in obj) {
     let itemToSearch = item, useLast = false;
+
+    //23-9-19 주석 처리. 수동으로 입력하자~
+    /*
     if(item.endsWith('_추가') || item.endsWith('_추가2')) {
       itemToSearch = item.replace(/_추가$/, '').replace(/_추가2$/, '');
       useLast = true;
 
-      //얘네 둘만 클릭하면 됨
-      if(item == '표지종류_추가' || item == '홍보자료 종류_추가') {
-        $(`a[onclick^="fnMetaProdtAtchFile0${numberToAdd}Add"]`)[0].click();
-        await $(`a[onclick^="fnMetaProdtAtchFile0${numberToAdd}Add"]`).ready();
-        numberToAdd++;
+      console.log('item, itemToSearch', item, itemToSearch);
+      //'표지이미지(3D)'랑 '보도자료 등 홍보자료' 오른쪽 [추가] 버튼만 누르면 됨
+      if(item.endsWith('_추가')) {
+        const header = findDiv_(root, itemToSearch, 'div.bigHeader>p:has(span)');
+        const buttonEl = header.parentNode.querySelector('div.addBtnArea>a');
+        const onclickStr = buttonEl.getAttribute('onclick');  //ex: 'fnMetaProdtAtchFile0xAdd(this);'
+        const id = onclickStr.replace('fnMetaProdtAtchFile0', '')[0];
+
+        buttonEl.click();
+        await $(`#fnMetaProdtAtchFile0${id}Add"]`).ready();
       }
     }
+    */
 
     const thSpan = findDiv_(root, itemToSearch, 'div:not([style])>table>tbody>tr>th>span', false, useLast) ||
                    findDiv_(root, itemToSearch, 'th>span',  false, useLast) || 

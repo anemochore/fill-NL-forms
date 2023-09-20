@@ -36,7 +36,7 @@ async function fillForms2(obj) {
 
   //배열도 따로 처리
   const objArray = extractToArray_(obj, ['구분', '저자유형', '저자정보', '저자소개']);
-  const contributorsNumber = objArray[0].length;
+  const contributorsNumber = objArray[0]?.length;
 
   //'유형'(중복되어 시트에서는 '저자유형'으로 지정했음)
   const itemsForObjArray = ['구분', '유형', '저자정보', '저자소개'];
@@ -105,7 +105,7 @@ async function fillForms2(obj) {
     }
     */
 
-    const thSpan = findDiv_(root, itemToSearch, 'div:not([style])>table>tbody>tr>th>span', false, useLast) ||
+    const thSpan = findDiv_(root, itemToSearch, 'table[data-name$="Data"]>tbody>tr>th>span', false, useLast) ||
                    findDiv_(root, itemToSearch, 'th>span',  false, useLast) || 
                    findDiv_(root, itemToSearch, 'div>span', false, useLast);
     let td = (thSpan?.closest('th') || thSpan?.closest('div'))?.nextElementSibling;

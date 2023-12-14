@@ -13,7 +13,7 @@ async function fillForms(obj) {
   $('#eaAddCode')         .val(obj['부가기호']);
   $('#title')             .val(obj['도서명']);
   $('#subtitle')          .val(obj['부제명']);
-  $('#originalTitle')     .val(obj['번역서의_원제목']);
+  $('[name="originalTitle"]').val(obj['번역서의_원제목']);
   $('#priceAmount')       .val(obj['정가']);
   $('#width')             .val(obj['가로']);
   $('#height')            .val(obj['세로']);

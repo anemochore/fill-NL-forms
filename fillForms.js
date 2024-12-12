@@ -21,15 +21,13 @@ async function fillForms(obj) {
   $('#publishingDate')    .val(obj['발행일']);
   $('#subjectHeadingText').val(obj['키워드']);
 
-  //신청자
-  const values = [...$('#applicantKey')[0].children];
-  const value = values[values.map(el => el.text.split('(')[0]).indexOf(obj['담당자'])]?.value;
-  if(!value) {
-    alert(`먼저 이 페이지 하단 '담당자 정보관리'에 들어가서 담당자 정보를 입력하고 다시 실행해주세요~`);
-    return;
-  }
-  $('#applicantKey').val(value);
-  fn_chgApplicant($('#applicantKey')[0]);
+  //신청자(2024년 12월 업데이트)
+  $('#inputName')  .val(obj['담당자']);
+  $('#inputEMail') .val(obj['담당자_이메일']);
+  $('#inputMobile').val(obj['담당자_전번']);
+
+  document.querySelector('#agreeEssential').click();
+
 
   //필요시 판수를 개정판으로
   if(obj['판수'] > 1) {
@@ -45,7 +43,7 @@ async function fillForms(obj) {
   let contributors = authors.concat(translators).map(el => el.trim());
   let roles = authors.fill('A01').concat(translators.fill('B06'));
 
-  //1번 원소는 무조건 세팅하고 버림
+  //1번 원소는 무조건 세팅하고 버림(저자)
   $(`#contributorList\\[0\\]\\.contributorName`).val(contributors[0]);
   contributors.shift();
   roles.shift();

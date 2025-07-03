@@ -68,9 +68,10 @@ async function fillForms2(obj) {
         }
         else if(td.querySelector('textarea')) {
           //저자소개 html 제거
-          doc = new DOMParser().parseFromString(objArray[i][num], 'text/html');
-          objArray[i][num] = doc.body.textContent || '';
-          td.querySelector('textarea').value = objArray[i][num];  //실제로 저장이 되는지 확인 필요
+          const el = document.createElement('div');
+          el.innerHTML = objArray[i][num];
+          const text = [...el.children].map(e => e.textContent).join('\n');  //전부 p라고 가정
+          td.querySelector('textarea').value = text;
         }
         else {
           console.warn('입력 타입을 찾을 수 없는 값이 있음!!!', objArray[i][num]);

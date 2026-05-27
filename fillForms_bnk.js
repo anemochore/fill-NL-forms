@@ -2,9 +2,9 @@
 
 async function fillForms2(obj) {
   //추가할 애들 먼저 추가
-  const objAdd = extractToArray_(obj, ['공식적 추천'], false);
+  const toAddArray = extractToArray_(obj, ['공식적 추천'], false);
 
-  if(objAdd[0]) {
+  if(toAddArray[0]) {
     const td = $('.select_product_dtl.selectmenu')[0].closest('div');
     //if(td.querySelector('select') && td.querySelector('span[role="combobox"]'))
     await forceSelect_(td, '공식적 추천');
@@ -15,7 +15,7 @@ async function fillForms2(obj) {
 
 
   //html은 따로 처리
-  const objHtml = extractToArray_(obj, ['책소개', '목차', '본문 인용', '서평', '공식적 추천']);
+  const htmlArray = extractToArray_(obj, ['책소개', '목차', '본문 인용', '서평', '공식적 추천']);
 
   let root = $('div.bookIntroContainer')[0];
   const menuDiv = root.firstElementChild;
@@ -27,16 +27,24 @@ async function fillForms2(obj) {
 
     magicSrcButton.click();
     await $('div.ck-editor__main>div.ck-source-editing-area').ready();
-    $('div.ck-editor__main>div.ck-source-editing-area')[0].setAttribute('data-value', objHtml[i]);
+    $('div.ck-editor__main>div.ck-source-editing-area')[0].setAttribute('data-value', htmlArray[i]);
 
     magicSrcButton.click();
     await $('div.ck-editor__main>div.ck-content').ready();
   }
 
 
-  //배열도 따로 처리
-  const objArray = extractToArray_(obj, ['구분', '저자유형', '저자정보', '저자소개']);
-  const contributorsNumber = objArray[0]?.length;
+  //키워드 따로 처리
+  const kw = extractToArray_(obj, ['키워드']).pop();
+  if (kw) {
+    const input = document.querySelector('.tagit input[type="text"]');
+    forceCommaInput(kw, input);
+  }
+
+
+  //배열 형태도 따로 처리
+  const ArrayArray = extractToArray_(obj, ['구분', '저자유형', '저자정보', '저자소개']);
+  const contributorsNumber = ArrayArray[0]?.length;
 
   //'유형'(중복되어 시트에서는 '저자유형'으로 지정했음)
   const itemsForObjArray = ['구분', '유형', '저자정보', '저자소개'];
@@ -57,25 +65,25 @@ async function fillForms2(obj) {
       const input = td.querySelector('div>input[type="text"]');
 
       if(input) {
-        input.value = objArray[i][num];
+        input.value = ArrayArray[i][num];
       }
       else {
         if(td.querySelector('select') && td.querySelector('span[role="combobox"]')) {
-          await forceSelect_(td, objArray[i][num]);
+          await forceSelect_(td, ArrayArray[i][num]);
         }
         else if(td.querySelector('input[type="radio"]')) {
-          forceRadio_(td, objArray[i][num]);  //실제로 저장이 되는지 확인 필요
+          forceRadio_(td, ArrayArray[i][num]);  //실제로 저장이 되는지 확인 필요
         }
         else if(td.querySelector('textarea')) {
           //저자소개 html 제거
           const el = document.createElement('div');
-          el.innerHTML = objArray[i][num];
+          el.innerHTML = ArrayArray[i][num];
           let text = [...el.children].map(e => e.textContent).join('\n').trim();  // 전부 p이거나
           if (text == '') text = el.textContent.trim();  // 아예 p가 없거나
           td.querySelector('textarea').value = text;
         }
         else {
-          console.warn('입력 타입을 찾을 수 없는 값이 있음!!!', objArray[i][num]);
+          console.warn('입력 타입을 찾을 수 없는 값이 있음!!!', ArrayArray[i][num]);
         }
       }
     }
@@ -189,4 +197,23 @@ async function fillForms2(obj) {
       return result;
   }
 
+  function forceCommaInput(textWithComma, input) {
+    const keyEventParam = {
+      key: ',',
+      code: 'Comma',
+      keyCode: 188,
+      which: 188,
+      bubbles: true
+    };
+
+    for (const text of textWithComma.split(',')) {
+      const value = text.trim();
+      if (!value) continue;
+
+      input.value = value;
+
+      input.dispatchEvent(new KeyboardEvent('keydown', keyEventParam));
+      input.dispatchEvent(new KeyboardEvent('keyup', keyEventParam));
+    }
+  }
 }

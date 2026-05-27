@@ -70,7 +70,8 @@ async function fillForms2(obj) {
           //저자소개 html 제거
           const el = document.createElement('div');
           el.innerHTML = objArray[i][num];
-          const text = [...el.children].map(e => e.textContent).join('\n');  //전부 p라고 가정
+          let text = [...el.children].map(e => e.textContent).join('\n').trim();  // 전부 p이거나
+          if (text == '') text = el.textContent.trim();  // 아예 p가 없거나
           td.querySelector('textarea').value = text;
         }
         else {
@@ -107,7 +108,7 @@ async function fillForms2(obj) {
     */
 
     const thSpan = findDiv_(root, itemToSearch, 'table[data-name$="Data"]>tbody>tr>th>span', false, useLast) ||
-                   findDiv_(root, itemToSearch, 'th>span',  false, useLast) || 
+                   findDiv_(root, itemToSearch, 'th>span',  false, useLast) ||
                    findDiv_(root, itemToSearch, 'div>span', false, useLast);
     let td = (thSpan?.closest('th') || thSpan?.closest('div'))?.nextElementSibling;
     if(!td) {
